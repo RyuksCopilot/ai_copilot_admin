@@ -24,7 +24,7 @@ const handleLogin = async (e) => {
 
   try {
     const response = await axios.post(
-      `http://localhost:5000/api/verification/${password}`,
+      `http://localhost:7000/api/v1/company/verification/${password}`,
       {},
       {
         headers: {
