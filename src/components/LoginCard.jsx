@@ -1,6 +1,5 @@
 import { useState } from "react";
-// import axios from "axios";
-// import axios from "axios/dist/axios.min.js";
+
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, EyeOff, LogIn, User, Lock } from "lucide-react";
 
