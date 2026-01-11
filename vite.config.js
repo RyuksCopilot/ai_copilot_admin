@@ -20,12 +20,17 @@
 
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import path from "path";
 
 export default defineConfig({
   plugins: [react()],
-  optimizeDeps: {
-    include: ["axios"],
+
+  resolve: {
+    alias: {
+      axios: "axios/dist/axios.min.js",
+    },
   },
+
   server: {
     proxy: {
       "/api": {
