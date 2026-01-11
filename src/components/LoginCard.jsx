@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+// import axios from "axios";
 // import axios from "axios/dist/axios.min.js";
 import { motion, AnimatePresence } from "framer-motion";
 import { Eye, EyeOff, LogIn, User, Lock } from "lucide-react";
@@ -18,54 +18,104 @@ export default function LoginCard() {
   const navigate = useNavigate();
 
 
+// const handleLogin = async (e) => {
+//   e.preventDefault();
+//   // setLoading(true);
+//   // setError("");
+
+//   try {
+//     const response = await axios.post(
+//       `https://ai-copilot-api-call-server.onrender.com/api/v1/company/verification/${password}`,
+//       {},
+//       {
+//         headers: {
+//           accept: "application/json",
+//         },
+//       }
+//     );
+//     console.log("Login response:", response.data['company']['company_name']);
+//     if (response.data) {
+//       // Store auth (can store token / user later)
+//       localStorage.setItem("is_auth", "true");
+//       localStorage.setItem(
+//         "auth_data",
+//         JSON.stringify(response.data['company'])
+//       );
+
+      
+      
+//       if (response.data['company'] && response.data['company']['company_name']==username) {
+//         toast.success(`Welcome ${response.data['company']['company_name']} `, {
+//         description: "Tally automation portal is ready",
+//       });
+//         navigate("/dashboard");
+//       }
+//       else{
+//         setError("Invalid username or password");
+//       }
+
+//     } else {
+//       setError("Verification failed");
+//     }
+//   } catch (err) {
+//     console.error("Login error:", err);
+
+//     setError(
+//       err?.response?.data?.detail ||
+//       err?.response?.data?.message ||
+//       "Invalid credentials or server error"
+//     );
+
+//     toast.error("Login failed", {
+//       description: "Unable to verify credentials",
+//     });
+//   } finally {
+//     setLoading(false);
+//   }
+// };
+  
+
 const handleLogin = async (e) => {
   e.preventDefault();
-  // setLoading(true);
-  // setError("");
+  setError("");
+  setLoading(true);
 
   try {
-    const response = await axios.post(
+    const res = await fetch(
       `https://ai-copilot-api-call-server.onrender.com/api/v1/company/verification/${password}`,
-      {},
       {
+        method: "POST",
         headers: {
-          accept: "application/json",
+          "Accept": "application/json",
         },
       }
     );
-    console.log("Login response:", response.data['company']['company_name']);
-    if (response.data) {
-      // Store auth (can store token / user later)
-      localStorage.setItem("is_auth", "true");
-      localStorage.setItem(
-        "auth_data",
-        JSON.stringify(response.data['company'])
-      );
 
-      
-      
-      if (response.data['company'] && response.data['company']['company_name']==username) {
-        toast.success(`Welcome ${response.data['company']['company_name']} `, {
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData?.detail || "Login failed");
+    }
+
+    const data = await res.json();
+
+    if (
+      data?.company &&
+      data.company.company_name === username
+    ) {
+      localStorage.setItem("is_auth", "true");
+      localStorage.setItem("auth_data", JSON.stringify(data.company));
+
+      toast.success(`Welcome ${data.company.company_name}`, {
         description: "Tally automation portal is ready",
       });
-        navigate("/dashboard");
-      }
-      else{
-        setError("Invalid username or password");
-      }
 
+      navigate("/dashboard");
     } else {
-      setError("Verification failed");
+      setError("Invalid username or password");
     }
   } catch (err) {
-    console.error("Login error:", err);
-
-    setError(
-      err?.response?.data?.detail ||
-      err?.response?.data?.message ||
-      "Invalid credentials or server error"
-    );
-
+    console.error(err);
+    setError(err.message || "Server error");
     toast.error("Login failed", {
       description: "Unable to verify credentials",
     });
@@ -73,7 +123,6 @@ const handleLogin = async (e) => {
     setLoading(false);
   }
 };
-
 
   return (
     <motion.div
