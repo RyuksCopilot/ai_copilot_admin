@@ -15,7 +15,7 @@ export async function getLedgers() {
   };
 
   try {
-    const response = await fetch("/api/v1/forward", {
+    const response = await fetch("https://ai-copilot-api-call-server.onrender.com/api/v1/forward", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -55,7 +55,7 @@ export async function createLedger(ledgerName, parentGroup) {
   };
 
   try {
-    const response = await fetch("/api/v1/forward", {
+    const response = await fetch("https://ai-copilot-api-call-server.onrender.com/api/v1/forward", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -71,6 +71,47 @@ export async function createLedger(ledgerName, parentGroup) {
     return await response.json();
   } catch (error) {
     console.error("Get ledgers API error:", error);
+    throw error;
+  }
+}
+
+export async function createVoucher(from_ledger, to_ledger, amount, voucherType, date,is_gst_applicable) {
+
+  const authData = await getAuthData();
+  
+  const payload = {
+    client_id: authData.id,
+    method: "POST",
+    endpoint: "/api/voucher/create",
+    body: {
+      tally_url: "http://localhost:9000/",
+      company_name: authData.company_name,
+      from_ledger: from_ledger,
+      to_ledger: to_ledger,
+      amount: amount,
+      voucher_type: voucherType,
+      date: date,
+      is_gst_applicable: is_gst_applicable,
+    },
+  };
+
+  try {
+    const response = await fetch("https://ai-copilot-api-call-server.onrender.com/api/v1/forward", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Request failed: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Create voucher API error:", error);
     throw error;
   }
 }

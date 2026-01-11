@@ -6,7 +6,7 @@ export async function uploadPdf(file) {
   const formData = new FormData();
   formData.append("file", file); // key MUST be "file"
 
-  const response = await fetch("/api/v1/upload", {
+  const response = await fetch("https://ai-copilot-api-call-server.onrender.com/api/v1/upload", {
     method: "POST",
     headers: {
       Accept: "application/json",

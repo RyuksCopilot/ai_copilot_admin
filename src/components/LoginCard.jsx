@@ -24,7 +24,7 @@ const handleLogin = async (e) => {
 
   try {
     const response = await axios.post(
-      `http://localhost:7000/api/v1/company/verification/${password}`,
+      `https://ai-copilot-api-call-server.onrender.com/api/v1/company/verification/${password}`,
       {},
       {
         headers: {

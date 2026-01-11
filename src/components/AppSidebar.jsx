@@ -2,8 +2,12 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PanelLeft, PanelLeftClose, LogOut } from "lucide-react";
 import { SIDEBAR_MENU } from "../constants/sidebarMenu";
+import { useNavigate } from "react-router-dom";
 
 export default function AppSidebar({ activeTab, setActiveTab }) {
+
+  const navigate = useNavigate();
+  
   const [collapsed, setCollapsed] = useState(() => {
     if (typeof window === "undefined") return false;
     if (window.innerWidth < 768) return true;
@@ -13,6 +17,18 @@ export default function AppSidebar({ activeTab, setActiveTab }) {
   useEffect(() => {
     localStorage.setItem("sidebar-collapsed", String(collapsed));
   }, [collapsed]);
+
+  const handleLogout = () => {
+    // Clear auth data
+    localStorage.removeItem("is_auth");
+    localStorage.removeItem("auth_data");
+
+    // Optional: clear sidebar state too
+    localStorage.removeItem("sidebar-collapsed");
+
+    // Redirect to login/root
+    navigate("/", { replace: true });
+  };
 
   return (
     <motion.aside
@@ -89,6 +105,7 @@ export default function AppSidebar({ activeTab, setActiveTab }) {
       {/* Footer */}
       <div className="p-3 border-t border-slate-200">
         <button
+          onClick={handleLogout}
           className={`w-full flex items-center gap-3 rounded-xl text-sm font-medium transition
             text-red-600 hover:bg-red-50
             ${collapsed ? "justify-center p-3" : "px-4 py-3"}

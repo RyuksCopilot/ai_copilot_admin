@@ -20,7 +20,7 @@ export async function createHistoryBulk(items) {
     })),
   };
 
-  const response = await fetch("/api/v1/history/bulk", {
+  const response = await fetch("https://ai-copilot-api-call-server.onrender.com/api/v1/history/bulk", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -45,7 +45,7 @@ export async function getHistoryByCompanyId() {
   }
 
   const response = await fetch(
-    `http://localhost:7000/api/v1/history/${authData.id}`,
+    `https://ai-copilot-api-call-server.onrender.com/api/v1/history/${authData.id}`,
     {
       method: "GET",
       headers: {
